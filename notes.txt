@@ -1,0 +1,10 @@
+# Notes for Node.js Project Setup
+
+This file contains basic setup commands and code snippets for initializing a Node.js project and installing packages.
+
+npm init -y   # Initializes a new Node.js project with default settings (creates package.json)
+
+npm i cat-me   # Installs the 'cat-me' package from npm
+require('cat-me')   # Imports the 'cat-me' package so you can use its functions in your code
+
+requare('http')
