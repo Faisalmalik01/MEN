@@ -1,178 +1,138 @@
-# 📝 Node.js Project Setup Notes
+Node.js Project Setup Notes
+===========================
 
-This file contains **step-by-step notes** for setting up a Node.js project, installing packages, using Express, configuring view engines, and handling routes & forms.
+This file contains step-by-step notes for setting up a Node.js project, installing packages, using Express, configuring view engines, middlewares, and handling routes & forms.
 
----
+----------------------------------------------------------------------
+1. Initialize a Node.js Project
+----------------------------------------------------------------------
+Command:
+    npm init -y
 
-## 🚀 1. Initialize a Node.js Project
-```bash
-npm init -y
-````
+- Creates a new Node.js project with default settings.
+- Generates a "package.json" file which stores:
+  • Project metadata (name, version, description)
+  • Dependencies and devDependencies
+  • Scripts (like "start", "dev" etc.)
 
-* Creates a new Node.js project with **default settings**.
-* Generates a `package.json` file which stores project metadata and dependencies.
+----------------------------------------------------------------------
+2. Installing Packages
+----------------------------------------------------------------------
 
----
+Example: cat-me package
+    npm i cat-me
 
-## 📦 2. Installing Packages
+- Installs the "cat-me" package (a fun ASCII cat generator).
+Usage:
+    const cat = require('cat-me');
+    console.log(cat()); // Prints a random ASCII cat
 
-### Example Package: `cat-me`
+Core Module Example: http
+    const http = require('http');
+- No need to install, it is built into Node.js.
 
-```bash
-npm i cat-me
-```
+----------------------------------------------------------------------
+3. Nodemon (Auto Restart Server)
+----------------------------------------------------------------------
+Command:
+    npx nodemon
 
-* Installs the **`cat-me`** package (a fun ASCII cat generator).
+- Runs your project with automatic server restart whenever files are saved.
+- Very useful for development (no need to manually restart server each time).
 
-Usage in code:
+----------------------------------------------------------------------
+4. Express.js Setup
+----------------------------------------------------------------------
+Command:
+    npm i express
 
-```js
-const cat = require('cat-me'); 
-console.log(cat()); // Prints a random ASCII cat
-```
-
-### Core Module Example: `http`
-
-```js
-const http = require('http'); 
-// No need to install, comes with Node.js
-```
-
----
-
-## 🔄 3. Nodemon (Auto Restart Server)
-
-```bash
-npx nodemon
-```
-
-* Runs your project with **automatic server restart** whenever you save changes.
-* Useful for development.
-
----
-
-## 🌐 4. Express.js Setup
-
-```bash
-npm i express
-```
-
-* Installs **Express.js**, the most popular Node.js framework for building web apps and APIs.
+- Installs Express.js, the most popular framework for Node.js.
+- Makes it easier to handle routes, requests, responses, and middleware.
 
 Basic server example:
+    const express = require('express');
+    const app = express();
 
-```js
-const express = require('express');
-const app = express();
+    app.get('/', (req, res) => {
+      res.send('Hello World from Express!');
+    });
 
-app.get('/', (req, res) => {
-  res.send('Hello World from Express!');
-});
+    app.listen(3000, () => {
+      console.log('Server running on http://localhost:3000');
+    });
 
-app.listen(3000, () => {
-  console.log('Server running on http://localhost:3000');
-});
-```
+----------------------------------------------------------------------
+5. View Engine (EJS)
+----------------------------------------------------------------------
 
----
+Command:
+    npm i ejs
 
-## 🎨 5. View Engine (EJS)
+- EJS (Embedded JavaScript Templates) lets you render dynamic HTML pages.
+- It works with template files that have .ejs extension.
 
-To render **dynamic HTML** pages with templates:
-
-```bash
-npm i ejs
-```
-
-Setup:
-
-```js
-app.set('view engine', 'ejs');
-```
+Setup in Express:
+    app.set('view engine', 'ejs');
 
 Usage:
+    app.get('/', (req, res) => {
+      res.render('index', { title: 'Home Page' });
+    });
 
-```js
-app.get('/', (req, res) => {
-  res.render('index', { title: 'Home Page' });
-});
-```
+Notes:
+- The file "index.ejs" should be inside a "views" folder.
+- The object { title: 'Home Page' } passes data to the template.
 
-* Here, `index.ejs` should be inside the `views/` folder.
-* The object `{ title: 'Home Page' }` passes data to the template.
+----------------------------------------------------------------------
+6. Middlewares in Express
+----------------------------------------------------------------------
 
----
+Definition:
+Middleware = Functions that execute during the request → response cycle.
+They can modify requests, responses, or end the cycle.
 
-## ⚙️ 6. Middlewares in Express
+Types of Middleware:
+1. Built-in Middlewares
+   - Provided by Express itself.
+   Example:
+       app.use(express.json()); // Parse JSON data
+       app.use(express.urlencoded({ extended: true })); // Parse form data
 
-**Middleware** = Functions that run between request and response.
-There are **3 types of middleware**:
+2. Custom Middlewares
+   - Written by the developer.
+   Example:
+       app.use((req, res, next) => {
+         console.log(`${req.method} ${req.url}`);
+         next(); // Pass control to next middleware/route
+       });
 
-1. **Built-in Middlewares**
+3. Third-party Middlewares
+   - Installed via npm.
+   Example: Morgan (HTTP request logger)
+       npm i morgan
 
-   * Already available in Express.
+       const morgan = require('morgan');
+       app.use(morgan('dev'));
 
-   ```js
-   app.use(express.json()); // Parse JSON data
-   app.use(express.urlencoded({ extended: true })); // Parse form data (like HTML forms)
-   ```
+----------------------------------------------------------------------
+7. Routes and Form Handling
+----------------------------------------------------------------------
 
-2. **Custom Middlewares**
+Routes = Define how the server responds to different client requests.
 
-   * Created by you.
+GET Request (server → frontend)
+    app.get('/route', (req, res) => {
+      res.send("Data from server to frontend");
+    });
 
-   ```js
-   app.use((req, res, next) => {
-     console.log(`${req.method} ${req.url}`);
-     next(); // Passes control to next middleware/route
-   });
-   ```
+POST Request (frontend → server)
+    app.post('/route', (req, res) => {
+      console.log(req.body); // Access data sent from frontend
+      res.send("Data received successfully");
+    });
 
-3. **Third-party Middlewares**
+Notes:
+- GET is used to fetch data.
+- POST is used to send data (like form submissions or JSON payloads).
 
-   * Installed from npm (example: `morgan` for logging).
-
-   ```bash
-   npm i morgan
-   ```
-
-   ```js
-   const morgan = require('morgan');
-   app.use(morgan('dev'));
-   ```
-
----
-
-## 📬 7. Routes & Form Handling
-
-Routes are used to **handle client requests**.
-
-### GET Request
-
-* Fetches data **from server → to frontend**.
-
-```js
-app.get('/route', (req, res) => {
-  res.send("Data from server to frontend");
-});
-```
-
-### POST Request
-
-* Sends data **from frontend → to server**.
-
-```js
-app.post('/route', (req, res) => {
-  console.log(req.body); // Access data sent from frontend
-  res.send("Data received successfully");
-});
-
-```
-✅ With this setup, you now have:
-
-* A Node.js project with `package.json`
-* Express.js server
-* EJS view engine for rendering HTML
-* Middlewares (built-in, custom, and third-party)
-* GET & POST route handling
-```
+----------------------------------------------------------------------
