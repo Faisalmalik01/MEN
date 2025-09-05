@@ -136,3 +136,88 @@ Notes:
 - POST is used to send data (like form submissions or JSON payloads).
 
 ----------------------------------------------------------------------
+8. Linking CSS and JS to Frontend (Static Files)
+----------------------------------------------------------------------
+
+In Express, any frontend file (like CSS, JS, images) cannot be accessed directly unless we tell the server to make them "public".
+This is done using "static files" setup. Static files are those that the user can directly access through the browser without restrictions or authentication.
+
+----------------------------------------------------------------------
+Setup for Static Files
+----------------------------------------------------------------------
+Command in app.js:
+    app.use(express.static("public"));
+
+- This means: Any file inside the "public" folder can now be served directly to the frontend.
+- Example: If "public/index.css" exists, then it can be accessed in the browser as:
+      http://localhost:3000/index.css
+- Similarly for "public/index.js":
+      http://localhost:3000/index.js
+
+----------------------------------------------------------------------
+How to Link CSS in EJS (Frontend)
+----------------------------------------------------------------------
+
+Suppose we have:
+    public/index.css
+
+Inside "views/index.ejs", we link it like this:
+    <link rel="stylesheet" href="/index.css">
+
+Explanation:
+- Even though the file is inside the "public" folder, we do not write "/public/index.css".
+- Express serves files inside "public" directly, so we just use "/index.css".
+
+Example index.ejs:
+    <!DOCTYPE html>
+    <html>
+      <head>
+        <title>Home</title>
+        <link rel="stylesheet" href="/index.css">
+      </head>
+      <body>
+        <h1>Hello with CSS!</h1>
+      </body>
+    </html>
+
+----------------------------------------------------------------------
+How to Link JS in EJS (Frontend)
+----------------------------------------------------------------------
+
+Suppose we have:
+    public/index.js
+
+Inside "views/index.ejs", we link it like this:
+    <script src="/index.js"></script>
+
+Example index.ejs:
+    <!DOCTYPE html>
+    <html>
+      <head>
+        <title>Home</title>
+        <link rel="stylesheet" href="/index.css">
+      </head>
+      <body>
+        <h1>Hello with CSS and JS!</h1>
+        <script src="/index.js"></script>
+      </body>
+    </html>
+
+----------------------------------------------------------------------
+Key Notes
+----------------------------------------------------------------------
+- Any file inside "public" folder can be linked directly with "/filename".
+- Common practice:
+    public/
+      ├── index.css
+      ├── index.js
+      └── images/logo.png
+- Example for image in EJS:
+    <img src="/images/logo.png" alt="Logo">
+
+This way, frontend files go:
+    Request from frontend -> served by backend (Express) -> directly accessible due to express.static
+
+
+
+10.mongo DB

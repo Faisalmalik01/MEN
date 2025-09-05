@@ -1,11 +1,21 @@
-const express = require('express');
-const app = express();
+
+const express = require('express'); // importing express module
+const app = express(); // creating express application
+
+
+const userModel = require('./models/user'); // importing user model 
+const dbConnection = require('./config/db'); // importing database connection   
+
+
 
 //built in middlewares
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+app.use(express.static("public")); // to serve static files like css, js, images
 
+
+//template engine setup
 app.set('view engine', 'ejs');
 
 
